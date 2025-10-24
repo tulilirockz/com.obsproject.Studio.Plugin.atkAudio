@@ -1,0 +1,89 @@
+From 8f935352184a36578c874309d1dd0a69b91fb4f7 Mon Sep 17 00:00:00 2001
+From: Tulip Blossom <tulilirockz@posteo.com>
+Date: Fri, 24 Oct 2025 00:44:31 -0300
+Subject: [PATCH] fix: add flathub PATHS to JUCE
+
+Signed-off-by: Tulip Blossom <tulilirockz@posteo.com>
+---
+ .../format_types/LV2_SDK/juce_lv2_config.h                  | 1 +
+ .../format_types/juce_LADSPAPluginFormat.cpp                | 2 +-
+ .../format_types/juce_LV2PluginFormat.cpp                   | 6 ++++--
+ .../format_types/juce_VST3PluginFormat.cpp                  | 2 +-
+ .../format_types/juce_VSTPluginFormat.cpp                   | 2 +-
+ 5 files changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/modules/juce_audio_processors/format_types/LV2_SDK/juce_lv2_config.h b/modules/juce_audio_processors/format_types/LV2_SDK/juce_lv2_config.h
+index 796d16ffb8..155e96a788 100644
+--- a/modules/juce_audio_processors/format_types/LV2_SDK/juce_lv2_config.h
++++ b/modules/juce_audio_processors/format_types/LV2_SDK/juce_lv2_config.h
+@@ -80,6 +80,7 @@
+   #define LILV_DEFAULT_LV2_PATH \
+     "~/.lv2"                        LILV_PATH_SEP \
+     "/usr/lib/lv2"                  LILV_PATH_SEP \
++    "/app/extensions/Plugins"       LILV_PATH_SEP \
+     "/usr/local/lib/lv2"
+  #else
+   #error "Unsupported platform"
+diff --git a/modules/juce_audio_processors/format_types/juce_LADSPAPluginFormat.cpp b/modules/juce_audio_processors/format_types/juce_LADSPAPluginFormat.cpp
+index 951bcf6544..967fcbfcee 100644
+--- a/modules/juce_audio_processors/format_types/juce_LADSPAPluginFormat.cpp
++++ b/modules/juce_audio_processors/format_types/juce_LADSPAPluginFormat.cpp
+@@ -720,7 +720,7 @@ void LADSPAPluginFormat::recursiveFileSearch (StringArray& results, const File&
+ 
+ FileSearchPath LADSPAPluginFormat::getDefaultLocationsToSearch()
+ {
+-    return  { SystemStats::getEnvironmentVariable ("LADSPA_PATH", "/usr/lib/ladspa;/usr/local/lib/ladspa;~/.ladspa").replace (":", ";") };
++    return  { SystemStats::getEnvironmentVariable ("LADSPA_PATH", "/app/extensions/Plugins;/usr/lib/ladspa;/usr/local/lib/ladspa;~/.ladspa").replace (":", ";") };
+ }
+ 
+ } // namespace juce
+diff --git a/modules/juce_audio_processors/format_types/juce_LV2PluginFormat.cpp b/modules/juce_audio_processors/format_types/juce_LV2PluginFormat.cpp
+index 592e7e7057..e63e93404c 100644
+--- a/modules/juce_audio_processors/format_types/juce_LV2PluginFormat.cpp
++++ b/modules/juce_audio_processors/format_types/juce_LV2PluginFormat.cpp
+@@ -5283,12 +5283,14 @@ public:
+       #else
+        #if JUCE_64BIT
+         if (File ("/usr/lib64/lv2").exists() || File ("/usr/local/lib64/lv2").exists())
+-            return { "~/.lv2;"
++            return { "/app/extensions/Plugins"
++                     "~/.lv2;"
+                      "/usr/lib64/lv2;"
+                      "/usr/local/lib64/lv2" };
+        #endif
+ 
+-        return { "~/.lv2;"
++        return { "/app/extensions/Plugins"
++                 "~/.lv2;"
+                  "/usr/lib/lv2;"
+                  "/usr/local/lib/lv2" };
+       #endif
+diff --git a/modules/juce_audio_processors/format_types/juce_VST3PluginFormat.cpp b/modules/juce_audio_processors/format_types/juce_VST3PluginFormat.cpp
+index 3444f06a44..3094a7267e 100644
+--- a/modules/juce_audio_processors/format_types/juce_VST3PluginFormat.cpp
++++ b/modules/juce_audio_processors/format_types/juce_VST3PluginFormat.cpp
+@@ -4299,7 +4299,7 @@ FileSearchPath VST3PluginFormat::getDefaultLocationsToSearch()
+    #elif JUCE_MAC
+     return FileSearchPath ("~/Library/Audio/Plug-Ins/VST3;/Library/Audio/Plug-Ins/VST3");
+    #else
+-    return FileSearchPath ("~/.vst3/;/usr/lib/vst3/;/usr/local/lib/vst3/");
++    return FileSearchPath ("/app/extensions/Plugins;~/.vst3/;/usr/lib/vst3/;/usr/local/lib/vst3/");
+    #endif
+ }
+ 
+diff --git a/modules/juce_audio_processors/format_types/juce_VSTPluginFormat.cpp b/modules/juce_audio_processors/format_types/juce_VSTPluginFormat.cpp
+index 3c400a329b..c90098979a 100644
+--- a/modules/juce_audio_processors/format_types/juce_VSTPluginFormat.cpp
++++ b/modules/juce_audio_processors/format_types/juce_VSTPluginFormat.cpp
+@@ -3661,7 +3661,7 @@ FileSearchPath VSTPluginFormat::getDefaultLocationsToSearch()
+     return FileSearchPath ("~/Library/Audio/Plug-Ins/VST;/Library/Audio/Plug-Ins/VST");
+    #elif JUCE_LINUX || JUCE_BSD || JUCE_ANDROID
+     return FileSearchPath (SystemStats::getEnvironmentVariable ("VST_PATH",
+-                                                                "/usr/lib/vst;/usr/local/lib/vst;~/.vst")
++                                                                "/app/extensions/Plugins;/usr/lib/vst;/usr/local/lib/vst;~/.vst")
+                              .replace (":", ";"));
+    #elif JUCE_WINDOWS
+     auto programFiles = File::getSpecialLocation (File::globalApplicationsDirectory).getFullPathName();
+-- 
+2.51.0
+
