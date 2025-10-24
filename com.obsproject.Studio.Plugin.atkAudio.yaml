@@ -1,0 +1,29 @@
+id: com.obsproject.Studio.Plugin.atkAudio
+branch: stable
+runtime: com.obsproject.Studio
+runtime-version: stable
+sdk: org.kde.Sdk//6.8
+build-extension: true
+separate-locales: false
+build-options:
+  prefix: /app/plugins/atkAudio
+  strip: true
+
+modules:
+  - name: atkaudio-plugin
+    buildsystem: simple
+    build-commands:
+      - cmake -S . -B _build -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX="${FLATPAK_DEST}" -DFETCHCONTENT_FULLY_DISCONNECTED=ON --compile-no-warning-as-error
+      - cmake --build _build -j --config Release
+    post-install:
+      - install -Dm644 ${FLATPAK_ID}.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo
+    sources:
+      - type: archive
+        url: https://github.com/atkAudio/PluginForObsRelease/archive/refs/tags/0.25.3.tar.gz
+        sha256: 2aa05d5bbfebd6ca9df535d709f8aa0681aca96d6521bd1607063254bfa993ff
+      - type: git
+        url: https://github.com/juce-framework/JUCE.git
+        commit: 1b460fe0895635a2ab8ac5c00cb5575e33e5dc1e
+        dest: _build/_deps/juce-src
+      - type: file
+        path: com.obsproject.Studio.Plugin.atkAudio.metainfo.xml

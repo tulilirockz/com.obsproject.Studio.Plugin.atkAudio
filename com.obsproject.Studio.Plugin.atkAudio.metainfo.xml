@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="addon">
+  <id>com.obsproject.Studio.Plugin.atkAudio</id>
+  <extends>com.obsproject.Studio</extends>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0 AND GPL-2.0 AND GPL-3.0</project_license>
+  <name>atkAudio</name>
+  <summary>interface directly with audio and MIDI hardware, OBS audio sources, and output audio as new OBS sources, allowing for complex audio processing setups</summary>
+  <url type="homepage">https://github.com/atkAudio/PluginForObsRelease</url>
+  <releases>
+    <release version="0.25.3" date="2025-10-23"/>
+  </releases>
+</component>
